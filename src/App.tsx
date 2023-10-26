@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
+import generateId from './generateId';
 import './App.css';
 import './style.css'
 
 type Task = {
   id: string;
   text: string;
+  completed: boolean;
 };
 
 const App: React.FC = () => {
+
+  
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', text: 'Пример задачи 1' },
-    { id: '2', text: 'Пример задачи 2' },
+    { id: '1', text: 'Выгулить собаку', completed: false },
+    { id: '2', text: 'Сделать тренировку', completed: true },
   ]);
-
   const [currentTask, setCurrentTask] = useState<string>('');
-
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentTask(event.target.value);
   };
@@ -24,11 +26,19 @@ const App: React.FC = () => {
       return;
     }
     const newTask: Task = {
-      id: Date.now().toString(), 
+      id: generateId(),
       text: currentTask,
+      completed: false,
     };
     setTasks([...tasks, newTask]);
     setCurrentTask('');
+  };
+
+  const handleTaskComplete = (id: string) => {
+    const updatedTasks = tasks.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
   };
 
   const handleDeleteTask = (id: string) => {
@@ -45,7 +55,18 @@ const App: React.FC = () => {
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
-            {task.text}{' '}
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => handleTaskComplete(task.id)}
+            />
+            <span
+              style={{
+                textDecoration: task.completed ? 'line-through' : 'none',
+              }}
+            >
+              {task.text}
+            </span>
             <button onClick={() => handleDeleteTask(task.id)}>Удалить</button>
           </li>
         ))}

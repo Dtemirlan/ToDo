@@ -31,13 +31,17 @@
   }
   
   button {
+    background-color: #ff5733;
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
+    transition: background-color 0.2s;
   }
   
   button:hover {
     background-color: #e3492c;
     color: white;
   }
+  
